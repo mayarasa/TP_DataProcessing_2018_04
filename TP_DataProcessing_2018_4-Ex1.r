@@ -63,7 +63,7 @@ for (i in 1:length(dirs)) {
 
 summary(dados)
 
-
+#Estudar:
 #hist(as.numeric(dados[3]))
 #mean(unlist(dados[3]))
 #sd(unlist(dados[3]))
