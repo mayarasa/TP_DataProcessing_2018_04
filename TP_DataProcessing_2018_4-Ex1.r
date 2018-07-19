@@ -107,3 +107,9 @@ mean(dados)
 
 summary(as.numeric(as.character(dados$Age)))
 
+#Número de homens e mulheres
+summary(dados$Gender)
+
+#Exercicio 4b por grupo
+library(plyr)
+count(dados, vars=c("Gender", "Group"))
