@@ -66,19 +66,19 @@ for (i in 1:length(dirs)) {
   dados = rbind(dados, dados_grupo)
 }
 
-dados = setNames(dados, c("Stimuli", "Condition", "Score", "Sujeito", 
-                          "Sexo", "Idade", "Língua", "L1/L2", "Grupo"))
+dados = setNames(dados, c("Stimuli", "Condition", "Score", "Initials", 
+                          "Gender", "Age", "Lang", "L1-L2", "Group"))
 
-levels(dados$Sexo) = tolower(levels(dados$Sexo))
+levels(dados$Gender) = tolower(levels(dados$Gender))
 
-levels(dados$Língua) = c("eg", "eg", "jp", "jp")
+levels(dados$Lang) = c("eg", "eg", "jp", "jp")
 
 names(dados)
 names(dados)[4]
 
 
-table(dados$Sexo)
-table(dados$Sexo, dados$Grupo)
+table(dados$Gender)
+table(dados$Gender, dados$Group)
 ##para separar as informações nos nomes da coluna ''stimuli''
 ##uso as.character dentro de strsplit porque ele estava como um factor até 
 ##então e o stri.split é só para caracter, não factor
@@ -95,6 +95,7 @@ cols_stimuli <- as.data.frame(str_split_fixed(dados$Stimuli, "_", 9)[,4:8])
 dados <- cbind(dados, cols_stimuli)
 #TODO: setname das novas colunas:  “Speaker”, “Spk_lang”, “Spk_Level”, “Attitude”, “Sentence”
 
+typeof(dados$Initials)
 
 
 summary(dados)
