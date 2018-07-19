@@ -8,7 +8,6 @@ dados = NULL
 
 #Obtém lista de diretórios
 dirs = list.dirs(fonte, full.names = FALSE)
-dirs
 
 #Para cada diretório, obtém seus arquivos, os processa, e inclui o grupo (nome dir)
 for (i in 1:length(dirs)) {
@@ -113,3 +112,5 @@ summary(dados$Gender)
 #Exercicio 4b por grupo
 library(plyr)
 count(dados, vars=c("Gender", "Group"))
+#Tem que chamar chisq.test para ver a correlação entre essas duas variáveis 
+#usando a Correlação de Pearson
