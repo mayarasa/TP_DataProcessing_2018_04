@@ -1,42 +1,47 @@
-#Caminho relativo do diret�rio de dados
-fonte = ".\\Perf_SpkUSL1jp1\\"
+#1 Extraction of the data from a set of files
+
+#Caminho relativo do diretório de dados
+fonte = "Perf_SpkUSL1jp1"
 
 #Inicializa var dados
 dados = NULL
 
-#Obt�m lista de diret�rios
+#Obtém lista de diretórios
 dirs = list.dirs(fonte, full.names = FALSE)
+dirs
 
-#Para cada diret�rio, obt�m seus arquivos, os processa, e inclui o grupo (nome dir)
+#Para cada diretório, obtém seus arquivos, os processa, e inclui o grupo (nome dir)
 for (i in 1:length(dirs)) {
   grupo = dirs[i]
   
-  #Se vier como vazio, pula pro pr�ximo
+  #Se vier como vazio, pula pro próximo
   if (grupo == "")
     next
   
-  caminho_dir = paste(fonte, grupo, "\\", sep = "")
+  caminho_dir = paste(fonte, .Platform$file.sep, grupo, .Platform$file.sep, sep = "")
   
-  #L� lista de nomes de arquivos
+  #Lê lista de nomes de arquivos
   lof = list.files(path = caminho_dir)
   
   #Inicializa var dados_grupo
   dados_grupo = NULL
   
-  #Obt�m tamanho da lista de nomes de arquivos
+  #Obtém tamanho da lista de nomes de arquivos
   tam_arq = length(lof)
   
-  #Para cada arquivo no diret�rio (grupo) processa os dados e nome do arquivo
+  #Para cada arquivo no diretório (grupo) processa os dados e nome do arquivo
   for (contador in 1:tam_arq) {
     nome_arq = lof[contador]
     
     #Concatena caminho e nome de arquivo
     caminho_arq = paste(caminho_dir, nome_arq, sep = "")
+    print("Lendo arquivo:")
+    print(caminho_arq)
     
-    #L� arquivo
+    #Lê arquivo
     dados_arquivo = read.table(file = caminho_arq, sep = "\t", skip = 1, header = TRUE)
     
-    #Fun��o split vai usar o padr�o ".txt" para remover a �ltima 
+    #Função split vai usar o padrão ".txt" para remover a última 
     #parte do nome do arquivo
     nome_sem_txt = unlist(strsplit(nome_arq, ".txt", fixed = TRUE))
     
@@ -61,10 +66,36 @@ for (i in 1:length(dirs)) {
   dados = rbind(dados, dados_grupo)
 }
 
+dados = setNames(dados, c("Stimuli", "Condition", "Score", "Sujeito", 
+                          "Sexo", "Idade", "Língua", "L1/L2", "Grupo"))
+
+levels(dados$Sexo) = tolower(levels(dados$Sexo))
+
+levels(dados$Língua) = c("eg", "eg", "jp", "jp")
+
+names(dados)
+names(dados)[4]
+
+
+table(dados$Sexo)
+table(dados$Sexo, dados$Grupo)
+##para separar as informações nos nomes da coluna ''stimuli''
+##uso as.character dentro de strsplit porque ele estava como um factor até 
+##então e o stri.split é só para caracter, não factor
+strsplit(as.character(dados$Stimuli), "_")
+library(stringr)
+##a função str_split_fixed abaixo retorna os caracteres separados em tabela. 
+##A função strsplit só retorna como linha de caracter e 
+##precisamos de enxergá-las como colunas; ou seja, tem que voltar como factor.
+## o número 9 aparece dentro da função para indicar a quantidade de colunas 
+##que vai ser retornado
+## os colchetes depois da função indica as colunas que quero que a função me 
+##retorne. preciso usar uma vírgula antes e os dois-pontos indicam "até"
+cols_stimuli <- as.data.frame(str_split_fixed(dados$Stimuli, "_", 9)[,4:8])
+dados <- cbind(dados, cols_stimuli)
+#TODO: setname das novas colunas:  “Speaker”, “Spk_lang”, “Spk_Level”, “Attitude”, “Sentence”
+
+
+
 summary(dados)
 
-#Estudar:
-#hist(as.numeric(dados[3]))
-#mean(unlist(dados[3]))
-#sd(unlist(dados[3]))
-#boxplot(unlist(dados[3]), as.factor(unlist(dados[5])))
