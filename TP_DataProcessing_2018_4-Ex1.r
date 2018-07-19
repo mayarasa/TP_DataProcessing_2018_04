@@ -95,8 +95,15 @@ cols_stimuli <- as.data.frame(str_split_fixed(dados$Stimuli, "_", 9)[,4:8])
 dados <- cbind(dados, cols_stimuli)
 #TODO: setname das novas colunas:  “Speaker”, “Spk_lang”, “Spk_Level”, “Attitude”, “Sentence”
 
-typeof(dados$Initials)
+#TODO: Converter dados categóricos em factor, numéricos em numeric
+dados$Gender <- as.factor(dados$Gender)
+dados$Score <- as.numeric(dados$Score)
 
+plot(x = dados$Gender, y = dados$Age, type = "p")
+mean(dados$Score)
+sd(dados$Score)
 
-summary(dados)
+mean(dados)
+
+summary(as.numeric(as.character(dados$Age)))
 
